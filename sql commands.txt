@@ -1,0 +1,121 @@
+create table Car
+(
+	Id INT primary key,
+	Manufacturer varchar(30),
+	ModelName varchar(20),
+	NumberOfSeats INT,
+	Price INT
+);
+
+
+create table Reservation
+(
+	Id INT primary key,
+	ReservationDate Date,
+	CarId INT,
+	PersonId INT,
+	constraint FK_Car_Reservation_CarId foreign key(CarId) references Car(Id),
+	constraint FK_Person_Reservation_PersonId foreign key(PersonId) references Person(Id)
+);
+
+create table CarPerson
+(
+	Id INT primary key,
+	CarId INT,
+	PersonId INT,
+	constraint FK_Car_Reservation_CarId foreign key(CarId) references Car(Id),
+	constraint FK_Person_Reservation_PersonId foreign key(PersonId) references Person(Id)
+)
+
+create table Person
+(
+	Id INT primary key,
+	FirstName varchar(20),
+	LastName varchar(30),
+	Email varchar(40)
+);
+
+drop table carperson;
+
+create table TrafficLicense
+(
+	Id INT primary key,
+	YearOfManufacture INT,
+	HorsePower INT,
+	CarId INT,
+	constraint FK_Car_TrafficLicense_CarId foreign KEY(CarId) references Car(Id)
+);
+
+insert into Car
+(
+	Id,
+	Manufacturer,
+	ModelName,
+	NumberOfSeats,
+	Price
+)
+values
+(
+	'4',
+	'Audi',
+	'A3',
+	'5',
+	'600'
+);
+
+insert into trafficlicense 
+(
+	Id,
+	YearOfManufacture,
+	HorsePower,
+	CarId
+)
+values
+(
+	'3',
+	'2023',
+	'300',
+	'3'
+);
+
+insert into Person
+(
+	Id,
+	FirstName,
+	LastName,
+	Email
+)
+values
+(
+	'3',
+	'Josip',
+	'Josipović',
+	'josip@gmail.com'
+);
+
+insert into Reservation
+(
+	Id,
+	ReservationDate,
+	CarId,
+	PersonId
+)
+values
+(
+	'3',
+	'2021-07-06',
+	'2',
+	'3'
+);
+
+alter table reservation 
+drop column Price;
+
+DELETE FROM reservation;
+
+
+tablice:
+car 1:M reservation
+person 1:M reservation	
+person  M:M car
+traffic_license 1:1 car
