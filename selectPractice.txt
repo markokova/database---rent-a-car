@@ -1,0 +1,106 @@
+select * from "Reservation";
+
+select * from "Car";
+
+select * from "Person";
+
+
+select * from "Reservation"
+inner join "Car" on "Reservation"."CarId" = "Car"."Id" 
+
+select * from "Reservation"
+left join "Car" on "Reservation"."CarId" = "Car"."Id" 
+left join "Person" on "Person"."Id" = "Reservation"."PersonId"
+
+select * from "Car"
+left join "Reservation" on "Car"."Id" = "Reservation"."CarId"
+
+select "FirstName","CarId" from "Person"
+left join "Reservation" on "Person"."Id" = "Reservation"."PersonId" 
+
+/*koje aute je tko vozio (npr ukoliko je doslo do kvara na autu kako bi ustanovili tko ga je pokidao)*/
+select "FirstName", "LastName", "Manufacturer", "Model" from "Person"
+left join "Reservation" on "Person"."Id" = "Reservation"."PersonId" 
+left join "Car" on "Reservation"."CarId" = "Car"."Id" 
+
+/*isto kao i prosli zadatak napravljeno na drugi nacin(bolje jer se na ovaj nacin ne hvataju osobe koje nisu nikad iznajmile auto)*/
+select "FirstName", "LastName", "Manufacturer", "Model" from "Car"
+left join "Reservation" on "Reservation"."CarId" = "Car"."Id" 
+left join "Person" on "Person"."Id" = "Reservation"."PersonId"
+
+
+/*pronadji osobu koja je vozila auto s id-jem=bf4c6ada-2806-4c1a-a539-4dcf182fcdbb   nacin 1*/
+select "FirstName", "LastName", "Email"
+from "Person"
+left join "Reservation" on "Reservation"."PersonId" = "Person"."Id" 
+left join "Car" on "Car"."Id" = "Reservation"."CarId"
+where "Reservation"."CarId" = 'bf4c6ada-2806-4c1a-a539-4dcf182fcdbb';
+
+/*pronadji osobu koja je vozila auto s id-jem=bf4c6ada-2806-4c1a-a539-4dcf182fcdbb    nacin 2*/
+select "FirstName", "LastName", "Email"
+from "Reservation"
+left join "Person" on "Reservation"."PersonId" = "Person"."Id" 
+left join "Car" on "Car"."Id" = "Reservation"."CarId"
+where "Reservation"."CarId" = 'bf4c6ada-2806-4c1a-a539-4dcf182fcdbb';
+
+/*pronadji sve ljude koji su vozili Skoda automobile*/
+select "FirstName", "LastName", "Email"
+from "Reservation"
+left join "Person" on "Reservation"."PersonId" = "Person"."Id" 
+left join "Car" on "Car"."Id" = "Reservation"."CarId"
+where "Car"."Manufacturer" = 'Skoda';
+
+/*pronadji sve aute jeftinije od 5000€*/
+select * from "Car"
+where "Car"."Price" < '5000'
+
+
+/*pronadji sve aute s vise od 5 sjedala*/
+select * from "Car"
+where "Car"."NumberOfSeats" > '5'
+
+/*pronadji sve osobe koje su iznajmile auto skuplji od 5000€*/
+select "FirstName", "LastName", "Email"
+from "Person"
+left join "Reservation" on "Reservation"."PersonId" = "Person"."Id"  
+left join "Car" on "Car"."Id" = "Reservation"."CarId" 
+where "Car"."Price" > '5000'
+
+/*isto ko i prosli zad*/
+select "FirstName", "LastName", "Email"
+from "Person"
+join "Reservation" on "Reservation"."PersonId" = "Person"."Id"  
+join "Car" on "Car"."Id" = "Reservation"."CarId" 
+where "Car"."Price" > '5000'
+
+
+/*pronadji sve osobe koje su rezervirale vise od jednog auta*/
+select "FirstName", "LastName", "Email"
+from "Person"
+join "Reservation" on "Reservation"."PersonId" = "Person"."Id"  
+GROUP BY "FirstName", "LastName", "Email"
+HAVING COUNT(distinct "Reservation"."Id") > 1;
+
+
+/*pronadji koliko je koja osoba puta rentala auto*/
+SELECT "FirstName", "LastName", "Email", COUNT(*) AS "Reservation_Count"
+FROM "Person"
+join "Reservation" on "Reservation"."PersonId" = "Person"."Id" 
+GROUP BY "FirstName", "LastName", "Email";
+
+
+/*pronadji koliko je puta odredena osoba rentala auto po id-u osobe*/
+SELECT "FirstName", "LastName", "Email", COUNT(*) AS "Reservation_Count"
+FROM "Person"
+join "Reservation" on "Reservation"."PersonId" = "Person"."Id" 
+where "Person"."Id" = '5bb420ff-b321-4135-8618-29e70478945e'
+GROUP BY "FirstName", "LastName", "Email"
+
+
+
+/*pronadji koliko je puta odredena osoba rentala auto po imenu osobe*/
+SELECT "FirstName", "LastName", "Email", COUNT(*) AS "Reservation_Count"
+FROM "Person"
+join "Reservation" on "Reservation"."PersonId" = "Person"."Id" 
+where "Person"."FirstName" = 'Pero'
+GROUP BY "FirstName", "LastName", "Email"
